@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: mongo
+
+spec:
+  containers:
+    - name: mongo
+      image: mongo
+
+      args:
+        - --dbpath
+        - /data/db
+
+      env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: adminuser
+
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: password123
+
+      readinessProbe:
+        exec:
+          command:
+            - /bin/sh
+            - -c
+            - mongosh --eval "db.adminCommand('ping')"
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        timeoutSeconds: 5
+        successThreshold: 1
+        failureThreshold: 6
+
+      livenessProbe:
+        exec:
+          command:
+            - /bin/sh
+            - -c
+            - mongosh --eval "dbaaaa.adminCommand('ping')"
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        timeoutSeconds: 5
+        successThreshold: 1
+        failureThreshold: 6
