@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: podtaint
+
+spec:
+  containers:
+    - name: podtaint-create
+      image: nginx
+
+  nodeSelector:
+    dedicated: devops
+
+  tolerations:
+    - key: ram_capacity
+      operator: Exists
+      value: high
+      effect: NoExecute
