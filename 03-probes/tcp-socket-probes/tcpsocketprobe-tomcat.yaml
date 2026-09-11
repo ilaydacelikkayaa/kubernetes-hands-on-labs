@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: tcpsocketprobe-tomcat
+
+spec:
+  containers:
+    - name: exp
+      image: tomcat:8.0
+
+      ports:
+        - containerPort: 8080
+
+      readinessProbe:
+        tcpSocket:
+          port: 8080
+        initialDelaySeconds: 5
+        periodSeconds: 5
+
+      livenessProbe:
+        tcpSocket:
+          port: 8080
+        initialDelaySeconds: 5
+        periodSeconds: 5
