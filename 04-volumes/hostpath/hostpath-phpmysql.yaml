@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: hostpath-phpmysql
+
+spec:
+  initContainers:
+    - name: install
+      image: alpine:3.9
+      command:
+        - wget
+        - "-O"
+        - "/var/www/html/index.php"
+        - "https://raw.githubusercontent.com/murataksunet/KUBERNETES-SifirdanBaslayarakOgrenin/main/Examples/FILES/index.php"
+
+      volumeMounts:
+        - name: storage
+          mountPath: /var/www/html
+          subPath: html
+
+  containers:
+    - name: php
+      image: php:7.0-apache
+
+      ports:
+        - containerPort: 80
+
+      volumeMounts:
+        - name: storage
+          mountPath: /var/www/html
+          subPath: html
+
+    - name: mysql
+      image: mysql:8.0
+
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "onetwothree!!"
+
+      ports:
+        - containerPort: 3306
+
+      volumeMounts:
+        - name: storage
+          mountPath: /var/lib/mysql
+          subPath: mysql
+
+  volumes:
+    - name: storage
+      hostPath:
+        path: /appdata
+        type: DirectoryOrCreate
