@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: deployment-web
+  namespace: production
+  labels:
+    app: k8s-web
+
+spec:
+  replicas: 5
+
+  selector:
+    matchLabels:
+      app: k8s-web
+
+  template:
+    metadata:
+      labels:
+        app: k8s-web
+
+    spec:
+      containers:
+        - name: web-rs-container
+          image: murataksunet/k8s-basic
+
+          ports:
+            - containerPort: 80
+
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 80
+
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 80
